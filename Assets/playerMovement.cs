@@ -12,9 +12,13 @@ public class playerMovement : MonoBehaviour
     public bool submerged = false;
     public float speed = 4f;
     public float swimForce = 10f;
+    public Camera camera;
+    public GameObject waterOverlay;
 
     private void Update() //add coyote jump to this later
     {
+        waterOverlay.SetActive(submerged); //submerged is a boolean value, if is submerged it will appear
+
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) //this script is for the player on land, not in water.
         {
             if(isGrounded)
@@ -40,6 +44,7 @@ public class playerMovement : MonoBehaviour
             else if (moveInput > 0) // Move right
             {
                 player.transform.rotation = Quaternion.Euler(0, 0, 0);
+                camera.orthographicSize = 9;
             }
         }
     }
@@ -48,6 +53,7 @@ public class playerMovement : MonoBehaviour
     {
         if (submerged)
         {
+            cameraFollowPlayer();
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
 
@@ -56,13 +62,17 @@ public class playerMovement : MonoBehaviour
             // Adjust the multiplier based on how strong you want the swimming force to be
             Rigidbody2D.AddForce(movement * swimForce);
 
-            float rotationSpeed = 2f;
+            float rotationSpeed = 8f;
             float angle = Mathf.Atan2(Rigidbody2D.velocity.y, Rigidbody2D.velocity.x) * Mathf.Rad2Deg;
 
             if (Rigidbody2D.velocity.magnitude > 0.1f)
             { // Only rotate when moving
                 Rigidbody2D.rotation = Mathf.LerpAngle(Rigidbody2D.rotation, angle, rotationSpeed * Time.fixedDeltaTime);
             }
+        }
+        else if(!submerged)
+        {
+            camera.transform.position = new Vector3(0, 0, -10);
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -100,6 +110,18 @@ public class playerMovement : MonoBehaviour
             Rigidbody2D.gravityScale = 1f;
             Rigidbody2D.velocity = new Vector2(Rigidbody2D.velocity.x, Rigidbody2D.velocity.y * 3f);
         }
+    }
+    void cameraFollowPlayer() //i used chatgpt for this because tutorials had the script in the camera and it would of took meaningless time
+    {
+        camera.orthographicSize = 6;
+        // Get the player's position
+        Vector3 targetPosition = player.transform.position;
+
+        // Set the target position's z to -10 to maintain the camera's z distance
+        targetPosition.z = -10;
+
+        // Smoothly interpolate between the current camera position and the target position
+        camera.transform.position = Vector3.Lerp(camera.transform.position, targetPosition, 0.1f);
     }
 }
 
