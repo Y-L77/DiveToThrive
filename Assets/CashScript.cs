@@ -9,20 +9,9 @@ public class CashScript : MonoBehaviour
     public double playerCash;
     public Text cashText;
 
-    private void OnValidate()
-    {
-        UpdateCashText();
-    }
-
-    // Start is called before the first frame update
-    private void Start()
-    {
-        UpdateCashText();
-    }
-
     private void Update()
     {
-
+        UpdateCashText();
     }
 
     private void UpdateCashText()

@@ -14,6 +14,11 @@ public class playerMovement : MonoBehaviour
     public float swimForce = 10f;
     public Camera camera;
     public GameObject waterOverlay;
+    public GameObject oxygenFill; //reference to the fill layer in the oxygen bar.
+    public int oxygenTime; // variable for how long the player can hold breathe
+    public int maxOxygen;
+    public float drownTime = 2;
+    public float elapsedTime = 0;
 
     private void Update() //add coyote jump to this later
     {
@@ -46,6 +51,21 @@ public class playerMovement : MonoBehaviour
                 player.transform.rotation = Quaternion.Euler(0, 0, 0);
                 camera.orthographicSize = 9;
             }
+        }
+        if(submerged)
+        {
+            elapsedTime += Time.deltaTime;
+            if(elapsedTime > drownTime)
+            {
+                updateOxygen();
+                elapsedTime = 0;
+            }
+
+        }
+
+        if (oxygenTime <= 0)
+        {
+            drown();
         }
     }
 
@@ -80,6 +100,7 @@ public class playerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("ground")) // Check if the collided object is tagged as "ground"
         {
             isGrounded = true; // Set grounded status to false
+            oxygenTime = maxOxygen;
         }
     }
     private void OnCollisionExit2D(Collision2D collision)
@@ -123,5 +144,26 @@ public class playerMovement : MonoBehaviour
         // Smoothly interpolate between the current camera position and the target position
         camera.transform.position = Vector3.Lerp(camera.transform.position, targetPosition, 0.1f);
     }
+
+    void updateOxygen()
+    {
+        oxygenTime--;
+        // Update the oxygen fill UI
+        float fillPercentage = (float)oxygenTime / maxOxygen; // Calculate the fill percentage
+        float leftValue = Mathf.Lerp(750, 270, fillPercentage); // Calculate the left value based on fill percentage
+
+        // Update the RectTransform of the oxygenFill
+        RectTransform oxygenFillRect = oxygenFill.GetComponent<RectTransform>();
+        oxygenFillRect.offsetMin = new Vector2(leftValue, oxygenFillRect.offsetMin.y);
+    }
+
+    void drown()
+    {
+        Debug.Log("you drowned");
+        //make logic for what happens when the player drowns
+        oxygenTime = maxOxygen;
+    }
+
+    
 }
 

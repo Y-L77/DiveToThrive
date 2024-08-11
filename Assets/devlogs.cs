@@ -15,10 +15,13 @@ public class devlogs : MonoBehaviour
 
 
     2024/08/09
+    Yipeng - 
     The lobby camera zoom will be 9, once the player dives into the water it will change to ~7 and follow the player.
     when player is underwater i might add a slightly transparent layer to make the screen look like it's underwater
     me make smooth camera movement on dive into water, coyote jumping and sounds now at 2am (nvm i no do sound rn me lazy)
 
+    2024/08/10
+    Yipeng - I make oxygen now
 
     */
 }
