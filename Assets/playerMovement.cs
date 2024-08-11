@@ -19,6 +19,8 @@ public class playerMovement : MonoBehaviour
     public int maxOxygen;
     public float drownTime = 2;
     public float elapsedTime = 0;
+    public AudioSource diveSound;
+    public AudioSource underwaterSound;
 
     private void Update() //add coyote jump to this later
     {
@@ -57,6 +59,7 @@ public class playerMovement : MonoBehaviour
             elapsedTime += Time.deltaTime;
             if(elapsedTime > drownTime)
             {
+                underwaterSound.Play();
                 updateOxygen();
                 elapsedTime = 0;
             }
@@ -119,6 +122,7 @@ public class playerMovement : MonoBehaviour
             Rigidbody2D.drag = 5f;
             Rigidbody2D.angularDrag = 10f;
             Rigidbody2D.gravityScale = 0.1f;
+            diveSound.Play();
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
