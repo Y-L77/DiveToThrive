@@ -85,15 +85,29 @@ public class playerMovement : MonoBehaviour
             // Adjust the multiplier based on how strong you want the swimming force to be
             Rigidbody2D.AddForce(movement * swimForce);
 
-            float rotationSpeed = 8f;
-            float angle = Mathf.Atan2(Rigidbody2D.velocity.y, Rigidbody2D.velocity.x) * Mathf.Rad2Deg;
 
-            if (Rigidbody2D.velocity.magnitude > 0.1f)
-            { // Only rotate when moving
-                Rigidbody2D.rotation = Mathf.LerpAngle(Rigidbody2D.rotation, angle, rotationSpeed * Time.fixedDeltaTime);
+
+            float rotationSpeed = 2.5f; // Adjust this value to control fluidity
+            float inputSensitivity = 0.2f; // Minimum input required to trigger rotation
+
+            // Get player input
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
+
+            // Check if input is significant enough to cause rotation
+            if (new Vector2(horizontalInput, verticalInput).magnitude > inputSensitivity)
+            {
+                // Calculate the desired rotation angle based on input
+                float targetAngle = Mathf.Atan2(verticalInput, horizontalInput) * Mathf.Rad2Deg;
+
+                // Adjust target angle based on sprite's initial orientation
+                targetAngle -= 90f; // Rotate the angle by 90 degrees to match sprite orientation
+
+                // Smoothly rotate towards the target angle
+                Rigidbody2D.rotation = Mathf.LerpAngle(Rigidbody2D.rotation, targetAngle, rotationSpeed * Time.fixedDeltaTime);
             }
         }
-        else if(!submerged)
+        else if (!submerged)
         {
             camera.transform.position = new Vector3(0, 0, -10);
         }
@@ -103,7 +117,6 @@ public class playerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("ground")) // Check if the collided object is tagged as "ground"
         {
             isGrounded = true; // Set grounded status to false
-            oxygenTime = maxOxygen;
         }
     }
     private void OnCollisionExit2D(Collision2D collision)
