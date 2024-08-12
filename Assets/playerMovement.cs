@@ -4,7 +4,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class playerMovement : MonoBehaviour
+
+    //this entire script was written by yipeng lu
 {
+    public bool dashing = false;
+    public bool shifting = false;
+    private float originalSwimForce;
     public Rigidbody2D Rigidbody2D;
     public GameObject player;
     public bool isGrounded = false;
@@ -15,13 +20,23 @@ public class playerMovement : MonoBehaviour
     public Camera camera;
     public GameObject waterOverlay;
     public GameObject oxygenFill; //reference to the fill layer in the oxygen bar.
-    public int oxygenTime; // variable for how long the player can hold breathe
-    public int maxOxygen;
-    public float drownTime = 2;
+    public float oxygenTime; // variable for how long the player can hold breathe
+    public float maxOxygen;
+    public float drownTime = 0.2f;
     public float elapsedTime = 0;
     public AudioSource diveSound;
     public AudioSource underwaterSound;
+    public AudioSource violentSplashing;
+    public AudioSource normalSplashing;
+    public AudioSource monkeyNoises;
+    public GameObject deathScreen;
 
+    private void Start()
+    {
+        originalSwimForce = swimForce;
+        oxygenTime = maxOxygen;
+        deathScreen.SetActive(false);
+    }
     private void Update() //add coyote jump to this later
     {
         waterOverlay.SetActive(submerged); //submerged is a boolean value, if is submerged it will appear
@@ -37,6 +52,77 @@ public class playerMovement : MonoBehaviour
                 Debug.Log("not on ground yet");
             }
         }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            shifting = true;
+        }
+        else
+        {
+            shifting = false;
+        }
+
+        //dash and shift input
+        if(submerged)
+        {
+            if (Input.GetKey(KeyCode.C))
+            {
+                dashing = true;
+                swimForce = originalSwimForce * 2f;
+                drownTime = 0.05f;
+            }
+            else
+            {
+                dashing = false;
+                swimForce = originalSwimForce;
+                drownTime = 0.2f;
+            }
+            if (dashing)
+            {
+                if (!violentSplashing.isPlaying) // Check if the audio is not already playing
+                {
+                    violentSplashing.Play();
+                    Debug.Log("playing");
+                }
+            }
+            else
+            {
+                if (violentSplashing.isPlaying) // Check if the audio is currently playing
+                {
+                    violentSplashing.Stop();
+                    Debug.Log("stopped");
+                }
+            }
+        }
+        else
+        {
+            violentSplashing.Stop();
+        }
+
+
+        if (submerged && !shifting)
+        {
+            drownTime = 0.2f;
+
+            if (!normalSplashing.isPlaying) // Check if the sound is not already playing
+            {
+                normalSplashing.Play();
+                Debug.Log("Normal splashing playing");
+            }
+        }
+        else if (submerged && shifting)
+        {
+            swimForce = originalSwimForce / 2;
+            drownTime = 0.4f;
+
+            if (normalSplashing.isPlaying) // Check if the sound is currently playing
+            {
+                normalSplashing.Stop();
+                Debug.Log("Normal splashing stopped");
+            }
+        }
+
+
 
         float moveInput = Input.GetAxis("Horizontal");
         if (!submerged)
@@ -59,7 +145,6 @@ public class playerMovement : MonoBehaviour
             elapsedTime += Time.deltaTime;
             if(elapsedTime > drownTime)
             {
-                underwaterSound.Play();
                 updateOxygen();
                 elapsedTime = 0;
             }
@@ -136,6 +221,7 @@ public class playerMovement : MonoBehaviour
             Rigidbody2D.angularDrag = 10f;
             Rigidbody2D.gravityScale = 0.1f;
             diveSound.Play();
+            underwaterSound.Play();
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -147,6 +233,8 @@ public class playerMovement : MonoBehaviour
             Rigidbody2D.angularDrag = 0.05f;
             Rigidbody2D.gravityScale = 1f;
             Rigidbody2D.velocity = new Vector2(Rigidbody2D.velocity.x, Rigidbody2D.velocity.y * 3f);
+            oxygenTime = maxOxygen;
+            underwaterSound.Stop();
         }
     }
     void cameraFollowPlayer() //i used chatgpt for this because tutorials had the script in the camera and it would of took meaningless time
@@ -177,8 +265,17 @@ public class playerMovement : MonoBehaviour
     void drown()
     {
         Debug.Log("you drowned");
-        //make logic for what happens when the player drowns
+        monkeyNoises.Play();
+        StartCoroutine(drownScreen());
         oxygenTime = maxOxygen;
+        player.transform.position = new Vector3(-10, 3, 0);
+    }
+
+    public IEnumerator drownScreen()
+    {
+        deathScreen.SetActive(true);
+        yield return new WaitForSeconds(3);
+        deathScreen.SetActive(false);
     }
 
     

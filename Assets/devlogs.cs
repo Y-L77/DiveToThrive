@@ -23,5 +23,7 @@ public class devlogs : MonoBehaviour
     2024/08/10
     Yipeng - I make oxygen now
 
+    11th, me add death screen, shift and dash
+
     */
 }
