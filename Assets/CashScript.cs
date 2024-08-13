@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class CashScript : MonoBehaviour
 {
-    public double playerCash;
+    public float playerCash;
     public Text cashText;
 
     private void Update()
