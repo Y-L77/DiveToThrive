@@ -26,4 +26,6 @@ public class devlogs : MonoBehaviour
     11th, me add death screen, shift and dash
 
     */
+
+    //i wont be updating this anymore im basically the only coder in this "team" -yipeng
 }

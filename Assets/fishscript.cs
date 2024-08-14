@@ -4,8 +4,6 @@ public class FishAI : MonoBehaviour
 {
     public int fishValue; //how much coins the fish gives
 
-
-
     public float speed = 2f; // Speed of the fish
     public float wanderRadiusX = 2f; // X-axis wander range
     public float wanderRadiusY = 4f; // Y-axis wander range (within 4-5 units)
@@ -60,16 +58,14 @@ public class FishAI : MonoBehaviour
         {
             rb.velocity = Vector2.zero; // Stop movement if not in water
         }
+
         if (playerMovementScript.shifting)
         {
             fleeing = false;
         }
 
-
-
-
-        //method of catching the fish
-        if(CatchFish.hands == true)
+        // Method of catching the fish
+        if (CatchFish.hands == true)
         {
             if (isTouchingPlayer && Input.GetKeyDown(KeyCode.Mouse0))
             {
@@ -80,14 +76,17 @@ public class FishAI : MonoBehaviour
 
     void Wander()
     {
-        if (Vector2.Distance(transform.position, wanderTarget) < 0.1f)
+        // If the fish has reached the wander target, set a new one
+        if (Vector2.Distance(transform.position, wanderTarget) < 0.1f || rb.velocity.magnitude < 0.1f)
         {
             SetWanderTarget();
         }
 
+        // Calculate direction towards the wander target
         Vector2 direction = (wanderTarget - (Vector2)transform.position).normalized;
         rb.velocity = direction * speed;
 
+        // Flip the fish sprite to face the direction of movement
         if (direction.x > 0 && transform.localScale.x < 0)
             Flip();
         else if (direction.x < 0 && transform.localScale.x > 0)
@@ -96,9 +95,14 @@ public class FishAI : MonoBehaviour
 
     void SetWanderTarget()
     {
+        // Set a new random wander target within the defined range
         float wanderX = Random.Range(startPosition.x - wanderRadiusX, startPosition.x + wanderRadiusX);
         float wanderY = Random.Range(startPosition.y - wanderRadiusY, startPosition.y + wanderRadiusY);
         wanderTarget = new Vector2(wanderX, wanderY);
+
+        // Ensure the fish starts moving towards the new target immediately
+        Vector2 direction = (wanderTarget - (Vector2)transform.position).normalized;
+        rb.velocity = direction * speed;
     }
 
     void DetectPlayer()
@@ -125,13 +129,14 @@ public class FishAI : MonoBehaviour
             Vector2 fleeDirection = (transform.position - player.transform.position).normalized;
             rb.velocity = fleeDirection * speed * 2; // Increase speed while fleeing
 
+            // Stop fleeing once the fish is far enough from the player
             if (Vector2.Distance(transform.position, player.transform.position) > detectionRange)
             {
                 fleeing = false;
-                rb.velocity = Vector2.zero;
-                SetWanderTarget();
+                SetWanderTarget(); // Set a new wander target after fleeing
             }
 
+            // Flip the fish sprite to face the fleeing direction
             if (fleeDirection.x > 0 && transform.localScale.x < 0)
                 Flip();
             else if (fleeDirection.x < 0 && transform.localScale.x > 0)
@@ -167,37 +172,32 @@ public class FishAI : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("ground"))
         {
-            wanderTarget.x = -wanderTarget.x; // Go the other way on X-axis
+            SetWanderTarget(); // Set a new wander target when hitting the ground
         }
         if (collision.gameObject.CompareTag("player"))
         {
             isTouchingPlayer = true; // Fish is touching the player
         }
     }
+
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("player"))
         {
-            isTouchingPlayer = false; // Fish no touch
+            isTouchingPlayer = false; // Fish is no longer touching the player
         }
     }
 
     void catchFish()
     {
-        if(fishAlive)
+        if (fishAlive)
         {
             fishAlive = false;
-            Destroy(gameObject, 1.5f);
             speed = 0;
+            Destroy(gameObject, 1.5f);
             cashScript.playerCash += fishValue;
 
-
-            //implemet show the coin ui later
-
-
+            // Implement showing the coin UI later
         }
-
-
-
     }
 }

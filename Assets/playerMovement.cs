@@ -24,6 +24,8 @@ public class playerMovement : MonoBehaviour
     public float maxOxygen;
     public float drownTime = 0.2f;
     public float elapsedTime = 0;
+    public GameObject shiftingText;
+    public GameObject dashingText;
     public AudioSource diveSound;
     public AudioSource underwaterSound;
     public AudioSource violentSplashing;
@@ -56,10 +58,12 @@ public class playerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift))
         {
             shifting = true;
+            shiftingText.SetActive(true);
         }
         else
         {
             shifting = false;
+            shiftingText.SetActive(false);
         }
 
         //dash and shift input
@@ -70,12 +74,14 @@ public class playerMovement : MonoBehaviour
                 dashing = true;
                 swimForce = originalSwimForce * 2f;
                 drownTime = 0.05f;
+                dashingText.SetActive(true);
             }
             else
             {
                 dashing = false;
                 swimForce = originalSwimForce;
                 drownTime = 0.2f;
+                dashingText.SetActive(false);
             }
             if (dashing)
             {
