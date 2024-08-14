@@ -7,6 +7,8 @@ TagManager:
   - player
   - water
   - ground
+  - cash
+  - fish
   layers:
   - Default
   - TransparentFX
