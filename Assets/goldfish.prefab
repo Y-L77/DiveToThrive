@@ -100,12 +100,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fishValue: 10
-  speed: 2
+  speed: 1.5
   wanderRadiusX: 5
   wanderRadiusY: 2
-  detectionRange: 6
+  detectionRange: 3
   isTouchingPlayer: 0
   fishAlive: 1
+  fishName: goldfish
   fleeing: 0
 --- !u!50 &3235352847924851524
 Rigidbody2D:

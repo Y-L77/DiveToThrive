@@ -10,7 +10,7 @@ public class FishAI : MonoBehaviour
     public float detectionRange = 10f; // Distance at which the fish detects the player
     public bool isTouchingPlayer = false;
     public bool fishAlive = true;
-
+    public string fishName; //used for the fish text on catch
     private Rigidbody2D rb;
     private Vector2 startPosition;
     private Vector2 wanderTarget;
@@ -20,6 +20,8 @@ public class FishAI : MonoBehaviour
     private playerMovement playerMovementScript; // Reference to the player's movement script
     private CashScript cashScript;
     private catchFish CatchFish;
+    public AudioSource fishFleeing;
+    private bool isSpinning = false; // Flag for spinning
 
     void Start()
     {
@@ -37,11 +39,17 @@ public class FishAI : MonoBehaviour
         if (cashObject != null)
         {
             cashScript = cashObject.GetComponent<CashScript>();
+            fishFleeing = cashObject.GetComponent<AudioSource>();
         }
     }
 
     void Update()
     {
+        if (isSpinning)
+        {
+            SpinFish(); // Call SpinFish if the fish is spinning
+        }
+
         if (isInWater) // Only update behavior if in water
         {
             if (fleeing)
@@ -86,11 +94,8 @@ public class FishAI : MonoBehaviour
         Vector2 direction = (wanderTarget - (Vector2)transform.position).normalized;
         rb.velocity = direction * speed;
 
-        // Flip the fish sprite to face the direction of movement
-        if (direction.x > 0 && transform.localScale.x < 0)
-            Flip();
-        else if (direction.x < 0 && transform.localScale.x > 0)
-            Flip();
+        // Rotate the fish towards the direction of movement
+        RotateTowards(direction);
     }
 
     void SetWanderTarget()
@@ -126,29 +131,33 @@ public class FishAI : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("player");
         if (player != null)
         {
+            if (!fishFleeing.isPlaying) // Check if the sound is not already playing
+            {
+                fishFleeing.Play();
+            }
+
             Vector2 fleeDirection = (transform.position - player.transform.position).normalized;
-            rb.velocity = fleeDirection * speed * 2; // Increase speed while fleeing
+            rb.velocity = fleeDirection * speed * 2.5f; // Increase speed while fleeing
 
             // Stop fleeing once the fish is far enough from the player
             if (Vector2.Distance(transform.position, player.transform.position) > detectionRange)
             {
                 fleeing = false;
                 SetWanderTarget(); // Set a new wander target after fleeing
+
+                // Stop the fleeing sound when the fish stops fleeing
+                fishFleeing.Stop();
             }
 
-            // Flip the fish sprite to face the fleeing direction
-            if (fleeDirection.x > 0 && transform.localScale.x < 0)
-                Flip();
-            else if (fleeDirection.x < 0 && transform.localScale.x > 0)
-                Flip();
+            // Rotate the fish towards the fleeing direction
+            RotateTowards(fleeDirection);
         }
     }
 
-    void Flip()
+    void RotateTowards(Vector2 direction)
     {
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        rb.rotation = angle;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -194,10 +203,17 @@ public class FishAI : MonoBehaviour
         {
             fishAlive = false;
             speed = 0;
-            Destroy(gameObject, 1.5f);
+            isSpinning = true; // Start spinning
             cashScript.playerCash += fishValue;
+            Destroy(gameObject, 1.5f);
 
             // Implement showing the coin UI later
         }
+    }
+
+        void SpinFish()
+    {
+        // Rotate the fish around its Z-axis
+        transform.Rotate(new Vector3(0, 0, 360) * Time.deltaTime);
     }
 }
