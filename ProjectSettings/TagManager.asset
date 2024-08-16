@@ -9,6 +9,7 @@ TagManager:
   - ground
   - cash
   - fish
+  - swordfish
   layers:
   - Default
   - TransparentFX
