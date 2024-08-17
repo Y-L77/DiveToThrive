@@ -1,4 +1,7 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using System.Collections;
 
 public class FishAI : MonoBehaviour
 {
@@ -22,6 +25,7 @@ public class FishAI : MonoBehaviour
     private catchFish CatchFish;
     public AudioSource fishFleeing;
     private bool isSpinning = false; // Flag for spinning
+    public TMP_Text catchText;
 
     void Start()
     {
@@ -40,6 +44,11 @@ public class FishAI : MonoBehaviour
         {
             cashScript = cashObject.GetComponent<CashScript>();
             fishFleeing = cashObject.GetComponent<AudioSource>();
+        }
+        GameObject textObject = GameObject.FindGameObjectWithTag("text");
+        if (textObject != null)
+        {
+            catchText = textObject.GetComponent<TMP_Text>();
         }
     }
 
@@ -201,6 +210,7 @@ public class FishAI : MonoBehaviour
     {
         if (fishAlive)
         {
+            StartCoroutine(catchTextChange());
             fishAlive = false;
             speed = 0;
             isSpinning = true; // Start spinning
@@ -215,5 +225,15 @@ public class FishAI : MonoBehaviour
     {
         // Rotate the fish around its Z-axis
         transform.Rotate(new Vector3(0, 0, 360) * Time.deltaTime);
+    }
+
+
+
+    public IEnumerator catchTextChange()
+    {
+        catchText.text = "You caught a " + fishName + "! +$" + fishValue;
+        yield return new WaitForSeconds(1.4f);
+        catchText.text = "";
+
     }
 }

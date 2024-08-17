@@ -10,6 +10,8 @@ TagManager:
   - cash
   - fish
   - swordfish
+  - text
+  - urchin
   layers:
   - Default
   - TransparentFX

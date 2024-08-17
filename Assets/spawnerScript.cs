@@ -12,7 +12,6 @@ public class spawnerScript : MonoBehaviour
 
     private void Start()
     {
-     
         lastSpawnTime = Time.time;
     }
 
@@ -34,8 +33,19 @@ public class spawnerScript : MonoBehaviour
 
     private int CountFish()
     {
+        // Count only the fish that match the name of the fishPrefab
         GameObject[] fish = GameObject.FindGameObjectsWithTag("fish");
-        return fish.Length;
+        int count = 0;
+
+        foreach (GameObject f in fish)
+        {
+            if (f.name.StartsWith(fishPrefab.name)) // Check if the fish name starts with the prefab's name
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private bool IsFishWithinDistance(float distance)
@@ -44,12 +54,12 @@ public class spawnerScript : MonoBehaviour
 
         foreach (GameObject f in fish)
         {
-            if (Vector3.Distance(transform.position, f.transform.position) < distance)
+            if (f.name.StartsWith(fishPrefab.name) && Vector3.Distance(transform.position, f.transform.position) < distance)
             {
-                return true; // Found a fish within the specified distance
+                return true; // Found a fish of the specific type within the specified distance
             }
         }
 
-        return false; // No fish found within the specified distance
+        return false; // No fish of the specific type found within the specified distance
     }
 }

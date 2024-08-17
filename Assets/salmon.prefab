@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4039903715266487452}
   m_Layer: 0
   m_Name: salmon
-  m_TagString: Untagged
+  m_TagString: fish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -180,3 +180,5 @@ MonoBehaviour:
   fishAlive: 1
   fishName: salmon
   fleeing: 0
+  fishFleeing: {fileID: 0}
+  catchText: {fileID: 0}

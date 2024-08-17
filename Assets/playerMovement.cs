@@ -33,6 +33,7 @@ public class playerMovement : MonoBehaviour
     public AudioSource monkeyNoises;
     public GameObject deathScreen;
     public GameObject swordfishDeathScreen;
+    public GameObject urchinDeathScreen;
 
     private void Start()
     {
@@ -44,7 +45,7 @@ public class playerMovement : MonoBehaviour
     {
         waterOverlay.SetActive(submerged); //submerged is a boolean value, if is submerged it will appear
 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) //this script is for the player on land, not in water.
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W)) //this script is for the player on land, not in water.
         {
             if (isGrounded)
             {
@@ -144,7 +145,7 @@ public class playerMovement : MonoBehaviour
             else if (moveInput > 0) // Move right
             {
                 player.transform.rotation = Quaternion.Euler(0, 0, 0);
-                camera.orthographicSize = 9;
+                camera.orthographicSize = 8.5f;
             }
         }
         if (submerged)
@@ -201,7 +202,7 @@ public class playerMovement : MonoBehaviour
         }
         else if (!submerged)
         {
-            camera.transform.position = new Vector3(0, 0, -10);
+            camera.transform.position = new Vector3(0, 3, -10);
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -233,6 +234,10 @@ public class playerMovement : MonoBehaviour
         if (collision.CompareTag("swordfish"))
         {
             swordfishKill();
+        }
+        if (collision.CompareTag("urchin"))
+        {
+            urchinKill();
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -288,7 +293,13 @@ public class playerMovement : MonoBehaviour
         StartCoroutine(swordfishDrownScreen());
         oxygenTime = maxOxygen;
         player.transform.position = new Vector3(-10, 3, 0);
-
+    }
+    void urchinKill()
+    {
+        monkeyNoises.Play();
+        StartCoroutine(urchinDrownScreen());
+        oxygenTime = maxOxygen;
+        player.transform.position = new Vector3(-10, 3, 0);
     }
 
     public IEnumerator drownScreen()
@@ -304,6 +315,13 @@ public class playerMovement : MonoBehaviour
         yield return new WaitForSeconds(3);
         swordfishDeathScreen.SetActive(false);
     }
+    public IEnumerator urchinDrownScreen()
+    {
+        urchinDeathScreen.SetActive(true);
+        yield return new WaitForSeconds(3);
+        urchinDeathScreen.SetActive(false);
+    }
+
 
 
 }
