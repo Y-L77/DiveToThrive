@@ -12,6 +12,7 @@ TagManager:
   - swordfish
   - text
   - urchin
+  - shop
   layers:
   - Default
   - TransparentFX

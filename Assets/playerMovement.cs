@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class playerMovement : MonoBehaviour
 
@@ -34,6 +35,7 @@ public class playerMovement : MonoBehaviour
     public GameObject deathScreen;
     public GameObject swordfishDeathScreen;
     public GameObject urchinDeathScreen;
+    public GameObject shop;
 
     private void Start()
     {
@@ -239,6 +241,10 @@ public class playerMovement : MonoBehaviour
         {
             urchinKill();
         }
+        if (collision.CompareTag("shop"))
+        {
+            shop.SetActive(true);
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -251,6 +257,10 @@ public class playerMovement : MonoBehaviour
             Rigidbody2D.velocity = new Vector2(Rigidbody2D.velocity.x, Rigidbody2D.velocity.y * 3f);
             oxygenTime = maxOxygen;
             underwaterSound.Stop();
+        }
+        if (collision.CompareTag("shop"))
+        {
+            shop.SetActive(false);
         }
     }
     void cameraFollowPlayer() //i used chatgpt for this because tutorials had the script in the camera and it would of took meaningless time
