@@ -10,7 +10,7 @@ public class playerMovement : MonoBehaviour
 {
     public bool dashing = false;
     public bool shifting = false;
-    private float originalSwimForce;
+    public float originalSwimForce;
     public Rigidbody2D Rigidbody2D;
     public GameObject player;
     public bool isGrounded = false;
