@@ -36,6 +36,8 @@ public class playerMovement : MonoBehaviour
     public GameObject swordfishDeathScreen;
     public GameObject urchinDeathScreen;
     public GameObject shop;
+    public GameObject crabDeathScreen;
+
 
     private void Start()
     {
@@ -241,6 +243,10 @@ public class playerMovement : MonoBehaviour
         {
             urchinKill();
         }
+        if (collision.CompareTag("claws"))
+        {
+            crabKill();
+        }
         if (collision.CompareTag("shop"))
         {
             shop.SetActive(true);
@@ -311,6 +317,13 @@ public class playerMovement : MonoBehaviour
         oxygenTime = maxOxygen;
         player.transform.position = new Vector3(-10, 3, 0);
     }
+    void crabKill()
+    {
+        monkeyNoises.Play();
+        StartCoroutine(crabDrownScreen());
+        oxygenTime = maxOxygen;
+        player.transform.position = new Vector3(-10, 3, 0);
+    }
 
     public IEnumerator drownScreen()
     {
@@ -330,6 +343,12 @@ public class playerMovement : MonoBehaviour
         urchinDeathScreen.SetActive(true);
         yield return new WaitForSeconds(3);
         urchinDeathScreen.SetActive(false);
+    }
+    public IEnumerator crabDrownScreen()
+    {
+        crabDeathScreen.SetActive(true);
+        yield return new WaitForSeconds(3);
+        crabDeathScreen.SetActive(false);
     }
 
 
