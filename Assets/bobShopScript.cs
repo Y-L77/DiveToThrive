@@ -10,6 +10,10 @@ public class bobShopScript : MonoBehaviour
     public CashScript cashScript;
     public Button buyOxygenButton;
     public Button buyLightButton;
+    public Button buyRadarButton;
+    public GameObject ylevel;
+    public catchFish CatchFish;
+    public Button buyHarpoonButton;
     void Start()
     {
         if(buyOxygenButton != null)
@@ -19,6 +23,14 @@ public class bobShopScript : MonoBehaviour
         if(buyLightButton != null)
         {
             buyLightButton.onClick.AddListener(buyLight);
+        }
+        if (buyRadarButton != null)
+        {
+            buyRadarButton.onClick.AddListener(buyRadar);
+        }
+        if (buyHarpoonButton != null)
+        {
+            buyHarpoonButton.onClick.AddListener(buyHarpoon);
         }
     }
 
@@ -41,6 +53,30 @@ public class bobShopScript : MonoBehaviour
         {
             cashScript.playerCash -= 250;
             playerLight.SetActive(true);
+        }
+        else
+        {
+            notEnoughCash();
+        }
+    }
+    public void buyRadar()
+    {
+        if(cashScript.playerCash >= 400)
+        {
+            cashScript.playerCash -= 400;
+            ylevel.SetActive(true);
+        }
+        else
+        {
+            notEnoughCash();
+        }
+    }
+    public void buyHarpoon()
+    {
+        if (cashScript.playerCash >= 750)
+        {
+            cashScript.playerCash -= 750;
+            CatchFish.harpoon = true;
         }
         else
         {

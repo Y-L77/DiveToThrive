@@ -90,6 +90,7 @@ public class swordfishScript : MonoBehaviour
                 catchFish();
             }
         }
+
     }
 
     void Wander()
@@ -175,6 +176,10 @@ public class swordfishScript : MonoBehaviour
         if (collision.CompareTag("water"))
         {
             isInWater = true; // Fish enters the water
+        }
+        if (collision.CompareTag("harpoon"))
+        {
+            catchFish();
         }
     }
 

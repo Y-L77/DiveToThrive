@@ -175,6 +175,10 @@ public class FishAI : MonoBehaviour
         {
             isInWater = true; // Fish enters the water
         }
+        if (collision.CompareTag("harpoon"))
+        {
+            catchFish();
+        }
     }
 
     void OnTriggerExit2D(Collider2D collision)
