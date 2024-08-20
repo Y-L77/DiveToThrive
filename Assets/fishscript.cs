@@ -26,6 +26,7 @@ public class FishAI : MonoBehaviour
     public AudioSource fishFleeing;
     private bool isSpinning = false; // Flag for spinning
     public TMP_Text catchText;
+    public AudioSource fishCatchSFX;
 
     void Start()
     {
@@ -214,6 +215,7 @@ public class FishAI : MonoBehaviour
     {
         if (fishAlive)
         {
+            fishCatchSFX.Play();
             StartCoroutine(catchTextChange());
             fishAlive = false;
             speed = 0;

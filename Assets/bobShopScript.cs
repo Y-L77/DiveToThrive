@@ -14,6 +14,10 @@ public class bobShopScript : MonoBehaviour
     public GameObject ylevel;
     public catchFish CatchFish;
     public Button buyHarpoonButton;
+    public GameObject bloopTrail;
+    public Button buyBloopButton;
+    public AudioSource buySFX;
+    public AudioSource notenoughSFX;
     void Start()
     {
         if(buyOxygenButton != null)
@@ -32,6 +36,10 @@ public class bobShopScript : MonoBehaviour
         {
             buyHarpoonButton.onClick.AddListener(buyHarpoon);
         }
+        if (buyBloopButton != null)
+        {
+            buyBloopButton.onClick.AddListener(buyBloop);
+        }
     }
 
     public void buyOxygen()
@@ -41,6 +49,7 @@ public class bobShopScript : MonoBehaviour
             cashScript.playerCash -= 100;
             PlayerMovement.maxOxygen += 10;
             PlayerMovement.oxygenTime += 10;
+            buySFX.Play();
         }
         else
         {
@@ -53,6 +62,7 @@ public class bobShopScript : MonoBehaviour
         {
             cashScript.playerCash -= 250;
             playerLight.SetActive(true);
+            buySFX.Play();
         }
         else
         {
@@ -65,6 +75,7 @@ public class bobShopScript : MonoBehaviour
         {
             cashScript.playerCash -= 400;
             ylevel.SetActive(true);
+            buySFX.Play();
         }
         else
         {
@@ -77,6 +88,20 @@ public class bobShopScript : MonoBehaviour
         {
             cashScript.playerCash -= 750;
             CatchFish.harpoon = true;
+            buySFX.Play();
+        }
+        else
+        {
+            notEnoughCash();
+        }
+    }
+    public void buyBloop()
+    {
+        if (cashScript.playerCash >= 888)
+        {
+            cashScript.playerCash -= 888;
+            bloopTrail.SetActive(true);
+            buySFX.Play();
         }
         else
         {
@@ -92,5 +117,6 @@ public class bobShopScript : MonoBehaviour
     void notEnoughCash()
     {
         Debug.Log("too poor");
+        notenoughSFX.Play();
     }
 }

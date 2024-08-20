@@ -26,6 +26,7 @@ public class urchinScript : MonoBehaviour
     public AudioSource fishFleeing;
     private bool isSpinning = false; // Flag for spinning
     public TMP_Text catchText;
+    public AudioSource fishCaughtSFX;
 
     void Start()
     {
@@ -205,6 +206,7 @@ public class urchinScript : MonoBehaviour
     {
         if (fishAlive)
         {
+            fishCaughtSFX.Play();
             StartCoroutine(catchTextChange());
             fishAlive = false;
             speed = 0;

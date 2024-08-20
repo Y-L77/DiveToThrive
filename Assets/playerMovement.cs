@@ -251,6 +251,10 @@ public class playerMovement : MonoBehaviour
         {
             shop.SetActive(true);
         }
+        if (collision.CompareTag("bloopportal"))
+        {
+            player.transform.position = new Vector3(-173, -269, 0);
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {

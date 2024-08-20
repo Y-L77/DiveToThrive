@@ -15,6 +15,7 @@ TagManager:
   - shop
   - claws
   - harpoon
+  - bloopportal
   layers:
   - Default
   - TransparentFX

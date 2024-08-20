@@ -13,7 +13,8 @@ public class catchFish : MonoBehaviour
     public Transform firePoint; // The point where the arrow will be instantiated
 
     private bool canShoot = true;
-    public float cooldownTime = 3f;
+    public float cooldownTime = 1.5f;
+    public AudioSource shoot;
 
     private void Update()
     {
@@ -22,6 +23,7 @@ public class catchFish : MonoBehaviour
             harpoonItem.SetActive(true);
             if (Input.GetKeyDown(KeyCode.Mouse0) && canShoot)
             {
+                shoot.Play();
                 ShootArrow();
             }
         }
