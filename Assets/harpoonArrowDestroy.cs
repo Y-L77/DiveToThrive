@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class harpoonArrowDestroy : MonoBehaviour
 {
-
     private void Start()
     {
-        Destroy(gameObject, 5f);
-        Debug.Log("spawn destroy");
+        Destroy(gameObject, 8f);
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Destroy(gameObject, 0.3f);
-        Debug.Log("collider destroy");
+        // Check if the projectile has collided with an object tagged as "Fish" or "Ground"
+        if (collision.CompareTag("fish") || collision.CompareTag("ground"))
+        {
+            Destroy(gameObject); // Destroy the projectile
+            Debug.Log("Projectile destroyed upon hitting " + collision.tag);
+        }
     }
+
 }

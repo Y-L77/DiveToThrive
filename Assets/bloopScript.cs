@@ -29,6 +29,7 @@ public class bloopScript : MonoBehaviour
     public TMP_Text catchText;
     public AudioSource fishCatchSFX;
     public AudioSource gruntSFX;
+    public GameObject winscreen;
 
     void Start()
     {
@@ -87,6 +88,7 @@ public class bloopScript : MonoBehaviour
         if(health <= 0)
         {
             catchFish();
+            StartCoroutine(winScreen());
         }
     }
 
@@ -245,5 +247,11 @@ public class bloopScript : MonoBehaviour
         yield return new WaitForSeconds(1.4f);
         catchText.text = "";
 
+    }
+    public IEnumerator winScreen()
+    {
+        winscreen.SetActive(true);
+        yield return new WaitForSeconds(5);
+        winscreen.SetActive(false);
     }
 }
