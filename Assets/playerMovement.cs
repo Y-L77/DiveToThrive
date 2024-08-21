@@ -37,6 +37,7 @@ public class playerMovement : MonoBehaviour
     public GameObject urchinDeathScreen;
     public GameObject shop;
     public GameObject crabDeathScreen;
+    public GameObject bloopDeathScreen;
 
 
     private void Start()
@@ -255,6 +256,10 @@ public class playerMovement : MonoBehaviour
         {
             player.transform.position = new Vector3(-173, -269, 0);
         }
+        if (collision.CompareTag("bloop"))
+        {
+            bloopKill();
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -328,6 +333,14 @@ public class playerMovement : MonoBehaviour
         oxygenTime = maxOxygen;
         player.transform.position = new Vector3(-10, 3, 0);
     }
+    void bloopKill()
+    {
+        monkeyNoises.Play();
+        StartCoroutine(bloopDrownScreen());
+        oxygenTime = maxOxygen;
+        player.transform.position = new Vector3(-10, 3, 0);
+    }
+
 
     public IEnumerator drownScreen()
     {
@@ -353,6 +366,12 @@ public class playerMovement : MonoBehaviour
         crabDeathScreen.SetActive(true);
         yield return new WaitForSeconds(3);
         crabDeathScreen.SetActive(false);
+    }
+    public IEnumerator bloopDrownScreen()
+    {
+        bloopDeathScreen.SetActive(true);
+        yield return new WaitForSeconds(5);
+        bloopDeathScreen.SetActive(false);
     }
 
 
